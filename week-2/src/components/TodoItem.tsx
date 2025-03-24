@@ -1,14 +1,12 @@
 import React from 'react';
 
-interface Todo {
-  id: number;
-  text: string;
-  deadline: string;
-  completed: boolean;
-}
-
 interface TodoItemProps {
-  todo: Todo;
+  todo: {
+    id: number;
+    text: string;
+    deadline: string;
+    completed: boolean;
+  };
   toggleTodo: (id: number) => void;
   deleteTodo: (id: number) => void;
 }
@@ -21,11 +19,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, toggleTodo, deleteTodo }) => 
         checked={todo.completed}
         onChange={() => toggleTodo(todo.id)}
       />
-      <span
-        style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
-      >
-        {todo.text} (by {todo.deadline})
+      <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+        {todo.text}
       </span>
+      <span> (by {todo.deadline})</span>
       <button onClick={() => deleteTodo(todo.id)}>Delete</button>
     </li>
   );

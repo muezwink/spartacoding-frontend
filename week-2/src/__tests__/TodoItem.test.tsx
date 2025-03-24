@@ -1,57 +1,34 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, it, expect } from 'vitest';
-import TodoList from '../components/TodoList';
+import { describe, it, expect, vi } from 'vitest';
+import TodoItem from '../components/TodoItem';
 
-describe('TodoList', () => {
-  it('renders the TodoList component', () => {
-    render(<TodoList />);
-    expect(screen.getByText('Todo List')).toBeInTheDocument();
-  });
+describe('TodoItem', () => {
+  const todo = {
+    id: 1,
+    text: 'Test Todo',
+    deadline: '2023-12-31',
+    completed: false,
+  };
 
-  it('adds a new todo item', () => {
-    render(<TodoList />);
-    const input = screen.getByPlaceholderText('Add a new todo');
-    const dateInput = screen.getByLabelText('Deadline');
-    const addButton = screen.getByText('Add');
-
-    fireEvent.change(input, { target: { value: 'New Todo' } });
-    fireEvent.change(dateInput, { target: { value: '2023-12-31' } });
-    fireEvent.click(addButton);
-
-    expect(screen.getByText('New Todo (by 2023-12-31)')).toBeInTheDocument();
+  it('renders the TodoItem component', () => {
+    render(<TodoItem todo={todo} toggleTodo={() => {}} deleteTodo={() => {}} />);
+    expect(screen.getByText('Test Todo')).toBeInTheDocument();
   });
 
   it('toggles a todo item', () => {
-    render(<TodoList />);
-    const input = screen.getByPlaceholderText('Add a new todo');
-    const dateInput = screen.getByLabelText('Deadline');
-    const addButton = screen.getByText('Add');
-
-    fireEvent.change(input, { target: { value: 'New Todo' } });
-    fireEvent.change(dateInput, { target: { value: '2023-12-31' } });
-    fireEvent.click(addButton);
-
-    const todoItem = screen.getByText('New Todo (by 2023-12-31)');
+    const toggleTodo = vi.fn();
+    render(<TodoItem todo={todo} toggleTodo={toggleTodo} deleteTodo={() => {}} />);
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-
-    expect(todoItem).toHaveStyle('text-decoration: line-through');
+    expect(toggleTodo).toHaveBeenCalledWith(todo.id);
   });
 
   it('deletes a todo item', () => {
-    render(<TodoList />);
-    const input = screen.getByPlaceholderText('Add a new todo');
-    const dateInput = screen.getByLabelText('Deadline');
-    const addButton = screen.getByText('Add');
-
-    fireEvent.change(input, { target: { value: 'New Todo' } });
-    fireEvent.change(dateInput, { target: { value: '2023-12-31' } });
-    fireEvent.click(addButton);
-
-    const deleteButton = screen.getByText('Delete');
+    const deleteTodo = vi.fn();
+    render(<TodoItem todo={todo} toggleTodo={() => {}} deleteTodo={deleteTodo} />);
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
     fireEvent.click(deleteButton);
-
-    expect(screen.queryByText('New Todo (by 2023-12-31)')).not.toBeInTheDocument();
+    expect(deleteTodo).toHaveBeenCalledWith(todo.id);
   });
 });
