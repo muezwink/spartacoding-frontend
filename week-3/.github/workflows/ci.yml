@@ -85,31 +85,35 @@ jobs:
         run: npm run test
         working-directory: week-3
 
-  build:
-    runs-on: ubuntu-latest
-    needs: [install-dependencies, test]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+build:
+  runs-on: ubuntu-latest
+  needs: [install-dependencies, test]
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
 
-      - name: Restore node modules from cache
-        id: restore-node-modules
-        uses: actions/cache@v3
-        with:
-          path: week-3/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('week-3/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install dependencies (if not cached)
-        if: steps.restore-node-modules.outputs.cache-hit != 'true'
-        run: npm install
-        working-directory: week-3
+    - name: Restore node modules from cache
+      id: restore-node-modules
+      uses: actions/cache@v3
+      with:
+        path: week-3/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('week-3/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Install dependencies (if not cached)
+      if: steps.restore-node-modules.outputs.cache-hit != 'true'
+      run: npm install
+      working-directory: week-3
 
-      - name: Run Build
-        run: npm run build
-        working-directory: week-3
+    - name: Configure TypeScript
+      run: tsc --init --jsx react-jsx
+      working-directory: week-3
+
+    - name: Run Build
+      run: npm run build
+      working-directory: week-3
