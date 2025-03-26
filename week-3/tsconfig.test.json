@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -9,8 +9,5 @@
     "strict": true,
     "noEmit": true
   },
-  "include": [
-    "vite.config.ts",
-    "vitest.config.ts"
-  ]
+  "include": ["vitest.config.ts", "src/**/*.test.tsx", "src/**/*.spec.tsx", "setupTests.ts"]
 }
